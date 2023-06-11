@@ -48,11 +48,21 @@ Cấu trúc thư mục của dự án như sau:
 - index.html
 - result.html
 - /data
-    - car_data.csv
+    - audi.csv
+    - bmw.csv
+    - focus.csv
+    - ford.csv
+    - hyundi.csv
+    - merc.csv
+    - skoda.csv
+    - toyota.csv
+    - vauxhall.csv
+    - vw.csv
 - /templates
     - index.html
     - result.html
 - /static/images
-    - image1.jpg
-    - image2.jpg
+    - anh-chu-thich.png
+    - residuals-ols.png
+    - residuals-sklearn.png
 - report.pdf
