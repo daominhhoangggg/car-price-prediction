@@ -10,6 +10,12 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 import statsmodels.api as sm
 
+#Ẩn cảnh báo
+def warn(*args, **kwargs):
+    pass
+import warnings
+warnings.warn = warn
+
 #Hàm đọc dữ liệu
 def read_data():
   dirs = os.listdir('data')
