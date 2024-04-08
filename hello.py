@@ -214,16 +214,18 @@ rmse = np.sqrt(mse)
 # print('RMSE:',rmse)
 
 # Hiện đồ thị
-"""
+
 y_pred = linear_regression.predict(X_test)
 residuals = y_test - y_pred
+plt.grid()
 plt.scatter(y_pred, residuals)
 plt.axhline(y=0, color='r', linestyle='--')
 plt.xlabel("Predicted Values")
 plt.ylabel("Residuals")
 plt.title("Residual Plot")
+# plt.savefig('static/images/res.png')
 plt.show()
-"""
+
 
 # Dự báo
 # Mô hình HQTT
