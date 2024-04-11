@@ -21,7 +21,7 @@ Dự án này là một ứng dụng web để dự báo giá xe hơi sử dụn
 - result.html: File HTML để hiển thị kết quả dự báo khi người dùng đã nhập đầy đủ các thuộc tính.
 - /data: Thư mục chứa dữ liệu về xe hơi, bao gồm các trường như năm sản xuất, dung tích động cơ, số dặm đã đi và giá là biến phụ thuộc.
 - /templates: Thư mục chứa các file HTML templates.
-- /static/images: Thư mục chứa các hình ảnh sử dụng trong trang web.
+- /static: Thư mục /image chứa các hình ảnh sử dụng trong trang web, các thư mục còn lại là file css điều chỉnh giao diện FrontEnd.
 - report.pdf: File PDF chứa báo cáo chi tiết về dự án.
 
 <a name="cài-đặt"></a>
@@ -31,7 +31,9 @@ Dự án này là một ứng dụng web để dự báo giá xe hơi sử dụn
 Để cài đặt dự án và chạy ứng dụng, làm theo các bước sau:
 
 1. Clone repository này vào máy của bạn.
-2. Chạy file app.py để khởi động ứng dụng.
+2. Đảm bảo máy đã có Python phiên bản 3.11.8 hoặc tương tự.
+3. Chạy lệnh pip install -r requirements.txt để cài các thư viện cần thiết.
+4. Chạy file app.py để khởi động ứng dụng bằng lệnh py app.py trong Terminal.
 
 <a name="sử-dụng"></a>
 
@@ -55,8 +57,6 @@ Cấu trúc thư mục của dự án như sau:
 
 - app.py
 - build_model.ipynb
-- index.html
-- result.html
 - /data
   - audi.csv
   - bmw.csv
@@ -71,11 +71,14 @@ Cấu trúc thư mục của dự án như sau:
 - /templates
   - index.html
   - result.html
-- /static/images
-  - anh-chu-thich.png
-  - residuals-ols.png
-  - residuals-sklearn.png
-- report.pdf
+- /static
+  - /image
+    - anh-chu-thich.png
+    - residuals-ols.png
+    - residuals-sklearn.png
+  - /font-awesome-4.7.0
+  - style.css
+- requirements.txt
 
 <a name="hello-py"></a>
 

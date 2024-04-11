@@ -15,6 +15,8 @@ from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 
+import statsmodels.api as sm
+
 # Ẩn cảnh báo
 def warn(*args, **kwargs):
     pass
@@ -171,7 +173,7 @@ for col in cols:
 
     # Thay thế các giá trị outlier
     df[col] = df[col].apply(lambda x: upper_threshold if x >= upper_threshold else (lower_threshold if x <= lower_threshold else x))
-# print(df.head())
+# print(df)
 
 # Chia tập dữ liệu X, y
 cat_features = ['year','transmission','fuelType','engineSize','Class']
@@ -180,7 +182,7 @@ features = cat_features + num_features
 
 X = df[features].reset_index(drop=True)
 y = df['price'].reset_index(drop=True)
-# print(X.head())
+# print(X)
 
 # chuẩn hóa và xử lý dữ liệu
 # Đường ống 
@@ -194,7 +196,6 @@ preprocessor = ColumnTransformer([
 ])
 
 X_transformed = preprocessor.fit_transform(X) # Fit và transform vào bộ dữ liệu
-
 # print(X_transformed)
 
 X_train, X_test, y_train, y_test = train_test_split(X_transformed,y,train_size=0.8) # Chia training set và test set (?)
@@ -214,14 +215,19 @@ rmse = np.sqrt(mse)
 # print('RMSE:',rmse)
 
 # Hiện đồ thị
-"""
+
 y_pred = linear_regression.predict(X_test)
 residuals = y_test - y_pred
-plt.scatter(y_pred, residuals)
-plt.axhline(y=0, color='r', linestyle='--')
+"""
+plt.figure(figsize=(8, 6))
+plt.grid(1, zorder=1)
+plt.scatter(y_pred, residuals, zorder=2)
+plt.axhline(y=0, color='r', linestyle='--', zorder=3)
 plt.xlabel("Predicted Values")
 plt.ylabel("Residuals")
 plt.title("Residual Plot")
+
+# plt.savefig('static/images/res.png')
 plt.show()
 """
 
@@ -235,5 +241,62 @@ coef = linear_regression.coef_
 
 y_pred = linear_regression.predict(X_test)
 # print("y_pred:", y_pred)
-# print("y_test", y_test)
+# print("y_test:", y_test)
 
+# Mô hình OLS
+X = sm.add_constant(X)
+#Mã hóa các cột category
+# Thực hiện encode cho các cột categorical
+X['price'] = y
+cat_cols = ['year', 'transmission','fuelType','engineSize','Class']
+for cat_col in cat_cols:
+    min_value = X.groupby(cat_col)['price'].sum().sort_values().index[0]
+    values = X[cat_col].unique()
+    for value in values:
+        X[value] = X[cat_col].apply(lambda x: 0 if x == min_value else (1 if x == value else 0))
+del X['price']
+# print(X.head())
+
+remove_cols = cat_cols
+X = X.drop(columns=remove_cols,axis=1)
+# print(X.head())
+
+# Thực hiện scaler cho các cột numerical
+from sklearn.preprocessing import StandardScaler
+num_cols = ['ln_mileage','tax','ln_mpg']
+scaler = StandardScaler()
+X[num_cols] = pd.DataFrame(data = scaler.fit_transform(X[num_cols]), columns= num_cols)
+# print(X.head())
+
+# sns.histplot(data=X, x='ln_mileage', bins=40)
+
+#Chia bộ dữ liệu
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y, train_size = 0.8)
+# print(len(X_train), len(X_test))
+#Huấn luyện mô hình
+model = sm.OLS(y_train, X_train)
+results = model.fit()
+# print(results.summary())
+
+y_pred = results.predict(X_test)
+residuals = y_test - y_pred
+
+"""
+plt.figure(figsize=(8, 6))
+plt.grid(1, zorder=1)
+plt.scatter(y_pred, residuals, zorder=2)
+plt.axhline(y=0, color='r', linestyle='--', zorder=3)
+plt.xlabel("Predicted Values")
+plt.ylabel("Residuals")
+plt.title("Residual Plot")
+
+# plt.savefig('static/images/res-ols.png')
+plt.show()
+"""
+
+# Calculate MSE, RMSE
+mse = mean_squared_error(y_test, y_pred)
+rmse = np.sqrt(mse)
+# print("MSE:", mse)
+# print("RMSE:", rmse)
